@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -25,8 +26,39 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      .parent{
+        position: relative;
+      }
+      .list{
+        position: absolute;
+        left: 0%;
+      }
+      .details{
+        position:absolute;
+        left:50%;
+      }
+      /* reset List styles*/
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      ul li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .maincolr{
+        color:royalblue;
+      }
+      .secondcolor{
+        color:rgb(90, 98, 197);
+      }
+    </style>
   </head>
-  <body>
+  <body style="background-color:rgba(38, 46, 40, 0.178);">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
