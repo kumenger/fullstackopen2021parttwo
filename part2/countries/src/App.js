@@ -11,7 +11,7 @@ const CountryWeather = (props) => {
       .then((res) => setCountryWeather(res.data));
   }, []);
 
-  console.log(countryWather);
+ 
   if (!countryWather) {
     return <></>;
   }
@@ -28,7 +28,7 @@ const Country = (props) => {
   return (
     props.countries && (
       <div className='row'>
-       <div className='col-12 text-center maincolr'><h5><span>{props.countries[props.index].name}</span></h5></div> 
+       <div className='col-12 maincolr'><h4><span>{props.countries[props.index].name}</span></h4></div> 
         <h5>Capital:<span className='secondcolor'>{props.countries[props.index].capital}</span></h5>
         <h5>Population:<span className='secondcolor'>{props.countries[props.index].population}</span></h5>
         
@@ -41,7 +41,7 @@ const Country = (props) => {
         
         </div>
         <div className='col-12'><img style={{padding:"5%"}} width="40%" src={props.countries[props.index].flag} /></div>
-        <h5 className='text-center maincolr'>Weather in {props.countries[props.index].capital}</h5>
+        <h4 className='maincolr'>Weather in {props.countries[props.index].capital}</h4>
         <CountryWeather country={props.countries[props.index].capital} />
       </div>
     )
@@ -64,12 +64,12 @@ const CountryDetail = (props) => {
       <div className="row">
         <div className="col-5 ">
           {props.countries.map((country, i) => (
-            <div className='row'>
+            <div className='row' key={i}>
             <ul>
-              <li key={i}>
-                <div className='row'>
+              <li>
+                <div className='row' >
                  <div className='offset-1 col-7 text-left'><span style={{marginRight: "10px"}}>{country.name}</span></div> 
-                <div className='col-2 '>  <button
+                <div className='col-2 text-left '>  <button
                     onClick={() => clickHandler(i)}
                     className={
                       selectedIndex === i
@@ -82,6 +82,7 @@ const CountryDetail = (props) => {
                   
                 </div>
               </li>
+              <hr></hr>
             </ul>
             </div>
           ))}
@@ -94,7 +95,7 @@ const CountryDetail = (props) => {
       </div>
     );
   } else if (props.countries.length > 10) {
-    return <div>Too many matches specify another filter</div>;
+    return <div className='text-center text-danger'>Too many matches specify another filter</div>;
   }
 };
 
@@ -119,7 +120,7 @@ const App = () => {
 
   return (
     <div className="container" style={{ paddingTop: "10px" }}>
-      <div className="row">
+      <div className="row" style={{padding:"10px"}}>
         <div className="col-12 input-group">
           <span className="input-group-text text-info bg-dark " style={{fontFamily:"cursive"}}>Search Country</span>
           <input
