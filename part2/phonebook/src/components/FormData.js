@@ -1,6 +1,7 @@
 const FormData = (props) => {
   return (
     <>
+    <h2 className="text-center">Add new Phonebook</h2>
       <form onSubmit={props.handleSubmit}>
         <div className="row">
           <div className="  col-md-12  ">

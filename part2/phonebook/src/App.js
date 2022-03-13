@@ -111,7 +111,7 @@ const App = () => {
   };
 
   return (
-<div className="container-fluid">
+<div className="container bg-light ">
       <div className="col-md-6 offset-md-3" >
       <Filter newSearch={newSearch} handleInputSearch={handleInputSearch} />
       <div className="">
@@ -119,7 +119,7 @@ const App = () => {
           ? `${serchResult[0].name} ${serchResult[0].number}`
           : ""}
       </div>
-      <h2>Add new Phonebook</h2>
+      
       <FormData
         handleSubmit={newName&&newNumber?handleSubmit:null}
         newName={newName}

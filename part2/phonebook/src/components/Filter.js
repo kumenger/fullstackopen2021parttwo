@@ -2,10 +2,10 @@ const Filter = (props) => {
   return (
     <>
     <h2 className="text-center">Phonebook</h2>
-      <label>
-        <span >Search By Name</span>
-           <input className="form-control" value={props.newSearch} onChange={props.handleInputSearch} />
-      </label>
+      <div className="row">
+        <div className="col-md-4" >Search By Name</div>
+         <div className="col-md-8"> <input className="form-control  " placeholder="type name here" value={props.newSearch} onChange={props.handleInputSearch} /></div> 
+      </div>
       
     </>
   );

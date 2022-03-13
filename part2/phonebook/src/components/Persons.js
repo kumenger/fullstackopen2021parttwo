@@ -1,7 +1,7 @@
 const Persons = ({ persons, deletePerson }) => {
   return (
     <>
-    <h2 className="text-left">Numbers</h2>
+    <h2 className="text-center">PhoneBook List</h2>
       {persons.map((name, i) => (
         <div className="row " key={name.id}>
            
