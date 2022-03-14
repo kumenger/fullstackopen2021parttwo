@@ -48,19 +48,19 @@ const Country = (props) => {
     <div className="row align-items-center justify-content-center">
       <div className=" col-6 border ">
         <img
-          style={{ padding: "5%" }}
+          
           width="60%"
           src={props.countries[props.index].coatOfArms.png}
         />
       </div>
       <div className="col-6   maincolr">
-        <h4 className="text-left">
+        <h3 className="text-left">
           <span>{props.countries[props.index].name.common}</span>
-        </h4>
+        </h3>
         <h5>
           Capital:
           <span className="secondcolor">
-            {props.countries[props.index].capital[props.index]}
+            {props.countries[props.index].capital}
           </span>
         </h5>
         <h5>
@@ -71,12 +71,12 @@ const Country = (props) => {
         </h5>
 
         <h5 className="">Languages:</h5>
-        <div className="col-12" className="maincolr">
+        <div className="col-12 " >
           {languages.length > 1
             ? languages.map((x, i) => (
-                <li key={i}>
-                  <span>
-                    <p>{x}</p>
+                <li key={i} >
+                  <span className=" text-red">
+                   {x}
                   </span>
                 </li>
               ))
