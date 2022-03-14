@@ -28,15 +28,23 @@ const App = () => {
     setNewSearch(e.target.value);
     setTimeout(() => {
       setSerchResult(persons.filter((p) => p.name === helper(e.target.value)));
-      
     }, 1000);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-   
-   if (
-      persons.some((x) => x.name.toLowerCase() === newName.toLowerCase() && x.number === newNumber)
+    if (newName === "" && newNumber === "") {
+      setNotification(`Plese enter Name and phone number`);
+      setNotificatioStyle("error");
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } else if (
+      persons.some(
+        (x) =>
+          x.name.toLowerCase() === newName.toLowerCase() &&
+          x.number === newNumber
+      )
     ) {
       setNotification(`${newName} is already exis in phonebook`);
       setNotificatioStyle("error");
@@ -44,7 +52,11 @@ const App = () => {
         setNotification(null);
       }, 5000);
     } else if (
-      persons.some((x) => x.name.toLowerCase() === newName.toLowerCase() && x.number !== newNumber)
+      persons.some(
+        (x) =>
+          x.name.toLowerCase() === newName.toLowerCase() &&
+          x.number !== newNumber
+      )
     ) {
       if (
         window.confirm(
@@ -111,26 +123,26 @@ const App = () => {
   };
 
   return (
-<div className="container bg-light ">
-      <div className="col-md-6 offset-md-3" >
-      <Filter newSearch={newSearch} handleInputSearch={handleInputSearch} />
-      <div className="">
-        {newSearch && serchResult.length > 0
-          ? `${serchResult[0].name} ${serchResult[0].number}`
-          : ""}
+    <div className="container bg-light ">
+      <div className="col-md-6 offset-md-3">
+        <Filter newSearch={newSearch} handleInputSearch={handleInputSearch} />
+        <div className="">
+          {newSearch && serchResult.length > 0
+            ? `${serchResult[0].name} ${serchResult[0].number}`
+            : ""}
+        </div>
+
+        <FormData
+          handleSubmit={newName && newNumber ? handleSubmit : null}
+          newName={newName}
+          handleInputChange={handleInputChange}
+          newNumber={newNumber}
+          handleNumberChange={handleNumberChange}
+        />
+        <Notification message={notification} styele={notificatioStyle} />
+
+        <Persons persons={persons} deletePerson={deletePerson} />
       </div>
-      
-      <FormData
-        handleSubmit={newName&&newNumber?handleSubmit:null}
-        newName={newName}
-        handleInputChange={handleInputChange}
-        newNumber={newNumber}
-        handleNumberChange={handleNumberChange}
-      />
-      <Notification message={notification} styele={notificatioStyle} />
-     
-      <Persons persons={persons}  deletePerson={deletePerson} />
-    </div>
     </div>
   );
 };
