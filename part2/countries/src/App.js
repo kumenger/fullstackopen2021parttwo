@@ -11,40 +11,83 @@ const CountryWeather = (props) => {
       .then((res) => setCountryWeather(res.data));
   }, []);
 
- 
   if (!countryWather) {
     return <></>;
   }
   return (
     <div>
-      <h5 className=''>Temprature:<span className='secondcolor'> {countryWather.current.temp_c} Celcius</span></h5>
+      <h5 className="">
+        Temprature:
+        <span className="secondcolor">
+          {" "}
+          {countryWather.current.temp_c} Celcius
+        </span>
+      </h5>
       <img src={countryWather.current.condition.icon} />
-      <h5>Wind:<span className='secondcolor'> {countryWather.current.wind_mph}Mph</span> </h5>
-      <h5>Wind Direction:<span className='secondcolor'> {countryWather.current.wind_dir}</span>  </h5>
+      <h5>
+        Wind:
+        <span className="secondcolor">
+          {" "}
+          {countryWather.current.wind_mph}Mph
+        </span>{" "}
+      </h5>
+      <h5>
+        Wind Direction:
+        <span className="secondcolor">
+          {" "}
+          {countryWather.current.wind_dir}
+        </span>{" "}
+      </h5>
     </div>
   );
 };
 const Country = (props) => {
+  console.log(Object.values(props.countries[props.index].languages));
+  let languages = Object.values(props.countries[props.index].languages);
   return (
-    props.countries && (
-      <div className='row'>
-       <div className='col-12 maincolr'><h4><span>{props.countries[props.index].name}</span></h4></div> 
-        <h5>Capital:<span className='secondcolor'>{props.countries[props.index].capital}</span></h5>
-        <h5>Population:<span className='secondcolor'>{props.countries[props.index].population}</span></h5>
-        
-         <h5 className=''>Languages:</h5> <div className='col-12'>
-          {props.countries[props.index].languages.length > 1
-            ? props.countries[props.index].languages.map((x, i) => (
-                <li key={i}><span  className='secondcolor'>{x.name}</span></li>
-              ))
-            : props.countries[props.index].languages[0].name}
-        
-        </div>
-        <div className='col-12'><img style={{padding:"5%"}} width="40%" src={props.countries[props.index].flag} /></div>
-        <h4 className='maincolr'>Weather in {props.countries[props.index].capital}</h4>
-        <CountryWeather country={props.countries[props.index].capital} />
+    <div className="row align-items-center justify-content-center">
+      <div className=" col-6 border ">
+        <img
+          style={{ padding: "5%" }}
+          width="60%"
+          src={props.countries[props.index].coatOfArms.png}
+        />
       </div>
-    )
+      <div className="col-6   maincolr">
+        <h4 className="text-left">
+          <span>{props.countries[props.index].name.common}</span>
+        </h4>
+        <h5>
+          Capital:
+          <span className="secondcolor">
+            {props.countries[props.index].capital[props.index]}
+          </span>
+        </h5>
+        <h5>
+          Population:
+          <span className="secondcolor">
+            {props.countries[props.index].population}
+          </span>
+        </h5>
+
+        <h5 className="">Languages:</h5>
+        <div className="col-12" className="maincolr">
+          {languages.length > 1
+            ? languages.map((x, i) => (
+                <li key={i}>
+                  <span>
+                    <p>{x}</p>
+                  </span>
+                </li>
+              ))
+            : languages[0]}
+          <h4 className="maincolr">
+            Weather in {props.countries[props.index].capital}
+          </h4>
+          <CountryWeather country={props.countries[props.index].capital} />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -62,32 +105,38 @@ const CountryDetail = (props) => {
   } else if (props.countries.length <= 10) {
     return (
       <div className="row">
-        <div className="col-5 ">
+        <div className="col-md-4 ">
           {props.countries.map((country, i) => (
-            <div className='row' key={i}>
-            <ul>
-              <li>
-                <div className='row' >
-                 <div className='offset-1 col-7 text-left'><span style={{marginRight: "10px"}}>{country.name}</span></div> 
-                <div className='col-2 text-left '>  <button
-                    onClick={() => clickHandler(i)}
-                    className={
-                      selectedIndex === i
-                        ? "btn btn-warning badge"
-                        : "btn btn-primary badge"
-                    }
-                  >
-                    {selectedIndex === i ? "Hide" : "show"}
-                  </button></div>
-                  
-                </div>
-              </li>
-              <hr></hr>
-            </ul>
+            <div className="row" key={i}>
+              <ul>
+                <li>
+                  <div className="row">
+                    <div className="offset-1 col-7 text-left">
+                      <span style={{ marginRight: "10px" }}>
+                        {country.name.common}
+                      </span>
+                    </div>
+                    <div className="col-2 text-left ">
+                      {" "}
+                      <button
+                        onClick={() => clickHandler(i)}
+                        className={
+                          selectedIndex === i
+                            ? "btn btn-warning badge"
+                            : "btn btn-primary badge"
+                        }
+                      >
+                        {selectedIndex === i ? "Hide" : "show"}
+                      </button>
+                    </div>
+                  </div>
+                </li>
+                <hr></hr>
+              </ul>
             </div>
           ))}
         </div>
-        <div className="col-7">
+        <div className="col-md-7">
           {selectedIndex > -1 && (
             <Country countries={props.countries} index={selectedIndex} />
           )}
@@ -95,7 +144,11 @@ const CountryDetail = (props) => {
       </div>
     );
   } else if (props.countries.length > 10) {
-    return <div className='text-center text-danger'>Too many matches specify another filter</div>;
+    return (
+      <div className="text-center text-danger">
+        Too many matches specify another filter
+      </div>
+    );
   }
 };
 
@@ -105,34 +158,35 @@ const App = () => {
   const [allcountry, setAllCountry] = useState([]);
   useEffect(() => {
     axios
-      .get("https://restcountries.eu/rest/v2/all")
+      .get("https://restcountries.com/v3.1/all")
       .then((response) => setAllCountry(response.data));
   }, []);
   const onChange = (e) => {
-    setSerchCountry(e.target.value);
+    setSerchCountry(e);
 
-    setTimeout(() => {
-      setResult(
-        allcountry.filter((country) => country.name.toLowerCase().includes(e.target.value.toLowerCase()))
-      );
-    }, 1000);
+    setResult(
+      allcountry.filter((country) =>
+        country.name.common.toUpperCase().includes(Serchcountry.toUpperCase())
+      )
+    );
   };
-
+  console.log(allcountry);
+  console.log(result);
   return (
-    <div className="container" style={{ paddingTop: "10px" }}>
-      <div className="row" style={{padding:"10px"}}>
-        <div className="col-12 input-group">
-          <span className="input-group-text text-info bg-dark " style={{fontFamily:"cursive"}}>Search Country</span>
+    <div className="container">
+      <div className="row justify-content-center alight-items-end">
+        <div className="col-md-12  text-center">
+          <h3>Country Search</h3>{" "}
           <input
-            className="form-control"
+            className=""
             value={Serchcountry}
-            onChange={onChange}
+            onChange={(e) => onChange(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="row ">
-        <div className="col-12">
+      <div className="row justify-content-center">
+        <div className="col-md-8">
           <CountryDetail countries={result} Serchcountry={Serchcountry} />
         </div>
       </div>
