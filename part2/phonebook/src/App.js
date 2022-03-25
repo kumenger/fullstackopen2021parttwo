@@ -5,7 +5,11 @@ import Persons from "./components/Persons";
 import Notification from "./components/Notification";
 import phoneBookMethod from "./sever/Phonebook";
 import helper from "./heplerMethod/helper";
+import {Modal,Button} from 'react-bootstrap'
+
 const App = () => {
+  const [showModal ,setShowModal]=useState(false)
+  const [deletedId,setDeletedID]=useState(0)
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
@@ -33,87 +37,41 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (newName === "" && newNumber === "") {
-      setNotification(`Plese enter Name and phone number`);
-      setNotificatioStyle("error");
+   
+      if(persons.some(p=>p.name===newName&&p.number!==newNumber)){
+    
+      let currentPerson = persons.find((p) =>p.name.toLowerCase() === newName.toLowerCase());
+    
+      let updateDCurrentperson = { ...currentPerson, number: newNumber };
+      phoneBookMethod.update(updateDCurrentperson).then(()=>{
+       persons.map((p)=>{p.name===newName?p.number=newNumber:p.number=p.number})
+       
+       setNotification(
+        `${newName}'s phone number sucessfuly changed to ${newNumber}`
+      );
+      setNotificatioStyle("succes");
       setTimeout(() => {
         setNotification(null);
       }, 5000);
-    } else if (
-      persons.some(
-        (x) =>
-          x.name.toLowerCase() === newName.toLowerCase() &&
-          x.number === newNumber
-      )
-    ) {
-      setNotification(`${newName} is already exis in phonebook`);
-      setNotificatioStyle("error");
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-    } else if (
-      persons.some(
-        (x) =>
-          x.name.toLowerCase() === newName.toLowerCase() &&
-          x.number !== newNumber
-      )
-    ) {
-      if (
-        window.confirm(
-          `${newName} is already added to phonebook ,update the old phone number with the new one?`
-        )
-      ) {
-        let currentId = persons.filter((p) => p.name === helper(newName))[0].id;
+       })
+     // setPersons(persons.map((p)=>p.id===currentId?p.number=newNumber:p.number))
+      
+     }
+     else {
+      let newPerson = { name: newName, number: newNumber };
 
-        let currentPerson = persons.find((p) => p.id === currentId);
-        let updateDCurrentperson = { ...currentPerson, number: newNumber };
-        phoneBookMethod
-          .update(updateDCurrentperson, currentId)
-          .then((res) => {
-            setPersons(persons.map((p) => (p.id === currentId ? res : p)));
-            setNotification(
-              `${newName}'s phone number sucessfuly changed to ${newNumber}`
-            );
-            setNotificatioStyle("succes");
-            setTimeout(() => {
-              setNotification(null);
-            }, 5000);
-          })
-          .catch((err) => {
-            setNotification(
-              `${newName} has been alrady removed from the system`
-            );
-            setNotificatioStyle("error");
-            setPersons(persons.filter((p) => p.name !== newName));
-            setTimeout(() => {
-              setNotification(null);
-            }, 5000);
-          });
-      }
-    } else {
-      {
-        let newPerson = { name: helper(newName), number: newNumber };
-
-        phoneBookMethod.createPerson(newPerson).then((res) => {
-          setPersons(persons.concat(res));
-          setNewName(" ");
-          setNewNumber(" ");
-          setNotification(`${newName} is added to phonebook`);
-          setNotificatioStyle("succes");
-          setTimeout(() => {
-            setNotification(null);
-          }, 5000);
-        });
-      }
-    }
-  };
-  const deletePerson = (id) => {
-    let p = persons.filter((p) => p.id === id);
-    console.log(p);
-    if (window.confirm(`Are sure to delete this ${p[0].name}`)) {
-      phoneBookMethod.deletePerson(id).then((res) => {
-        setPersons(persons.filter((p) => p.id !== id));
-        setNotification(`${p[0].name} is deleted from  phonebook`);
+      phoneBookMethod.createPerson(newPerson).then((res) => {
+        setPersons(persons.concat(res));
+        setNewName(" ");
+        setNewNumber(" ");
+        setNotification(`${newName} is added to phonebook`);
+        setNotificatioStyle("succes");
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      }).catch((error)=>{
+        
+        setNotification(error.response.data.error)
         setNotificatioStyle("error");
         setTimeout(() => {
           setNotification(null);
@@ -121,19 +79,55 @@ const App = () => {
       });
     }
   };
-
+  const deletePerson = (id) => {
+    setShowModal(true)
+    setDeletedID(id)
+    
+ 
+  };
+  const modelConfimDeletion=()=>{ 
+    let p = persons.filter((p) => p.id === deletedId);
+    
+    phoneBookMethod.deletePerson(deletedId).then((res) => {
+      setPersons(persons.filter((p) => p.id !== deletedId));
+      setShowModal(false)
+      setNotification(`${p[0].name} is deleted from  phonebook`);
+      setNotificatioStyle("error");
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    });}
+ 
+    
   return (
+    
     <div className="container bg-light ">
+     <Modal show={showModal} onHide={()=>setShowModal(false)} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>`are sure you want delete  `</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={()=>setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={
+          modelConfimDeletion
+          }>
+            Delete 
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="col-md-6 offset-md-3">
         <Filter newSearch={newSearch} handleInputSearch={handleInputSearch} />
-        <div className="">
+        <div className="text-danger"><strong>
           {newSearch && serchResult.length > 0
             ? `${serchResult[0].name} ${serchResult[0].number}`
-            : ""}
+            : ""}</strong>
         </div>
 
         <FormData
-          handleSubmit={newName && newNumber ? handleSubmit : null}
+          handleSubmit={handleSubmit}
           newName={newName}
           handleInputChange={handleInputChange}
           newNumber={newNumber}
@@ -142,6 +136,7 @@ const App = () => {
         <Notification message={notification} styele={notificatioStyle} />
 
         <Persons persons={persons} deletePerson={deletePerson} />
+       
       </div>
     </div>
   );

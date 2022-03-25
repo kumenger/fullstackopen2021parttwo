@@ -1,6 +1,6 @@
 import axios from 'axios'
 import helper  from '../heplerMethod/helper'
-const baseuri='http://localhost:3007/persons'
+const baseuri='/api/persons'
 
 
 const getAll=()=>{
@@ -16,8 +16,8 @@ const deletePerson=(id)=>{
     
     //return response.then((res)=>res.data)
 }
-const update=(newObject,id)=>{
- const response=   axios.put(`${baseuri}/${id}`,newObject)
+const update=(newObject)=>{
+ const response=   axios.put(`${baseuri}`,newObject)
  return response.then((res)=>res.data)
 }
 const get=(SerachName)=>{
